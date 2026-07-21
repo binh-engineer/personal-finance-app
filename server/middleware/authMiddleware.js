@@ -9,13 +9,20 @@ const authMiddleware = (req, res, next) => {
   }
 
   const token = authHeader.split(" ")[1];
+  const jwtSecret = process.env.JWT_SECRET;
+  if (!jwtSecret) {
+    console.error("JWT_SECRET is missing for token verification.");
+    return res.status(500).json({ error: "Server misconfiguration" });
+  }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, jwtSecret);
     req.user = decoded;
     next();
   } catch (err) {
-    return res.status(401).json({ error: "Invalid or expired token" });
+    console.error("JWT verification failed:", err.message);
+    const message = err.name === "TokenExpiredError" ? "Token expired" : "Invalid token";
+    return res.status(401).json({ error: message });
   }
 };
 

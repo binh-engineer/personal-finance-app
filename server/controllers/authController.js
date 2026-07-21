@@ -39,9 +39,10 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const jwtSecret = process.env.JWT_SECRET || "dev-jwt-secret-change-me";
-    if (!process.env.JWT_SECRET) {
-      console.warn("JWT_SECRET is not set; using development fallback secret");
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      console.error("JWT_SECRET is not configured.");
+      return res.status(500).json({ error: "Server misconfiguration" });
     }
 
     const token = jwt.sign(
