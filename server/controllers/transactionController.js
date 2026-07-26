@@ -38,3 +38,18 @@ export const createTransaction = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+export const getTransactions = async (req, res) => {
+  try {
+    const transactions = await prisma.transaction.findMany({
+      where: { userId: req.user.userId },
+      include: { category: true },
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.json(transactions);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
