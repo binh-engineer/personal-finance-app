@@ -92,3 +92,26 @@ export const updateTransaction = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+export const deleteTransaction = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existing = await prisma.transaction.findUnique({
+      where: { id: Number(id) },
+    });
+    if (!existing) {
+      return res.status(404).json({ error: "Transaction not found" });
+    }
+    if (existing.userId !== req.user.userId) {
+      return res.status(403).json({ error: "Not authorized to delete this transaction" });
+    }
+
+    await prisma.transaction.delete({ where: { id: Number(id) } });
+
+    res.json({ message: "Transaction deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
