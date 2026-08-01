@@ -1,0 +1,12 @@
+$kind: collection
+name: Personal Finance API
+variables:
+  - key: base_url
+    value: 'http://localhost:3001'
+  - key: token
+    value: ''
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'

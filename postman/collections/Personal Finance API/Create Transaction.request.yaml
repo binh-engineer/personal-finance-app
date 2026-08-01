@@ -1,0 +1,17 @@
+$kind: http-request
+name: Create Transaction
+method: POST
+url: '{{base_url}}/api/transactions'
+order: 2000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "amount": 50,
+      "type": "expense",
+      "description": "Groceries",
+      "categoryId": 1
+    }
